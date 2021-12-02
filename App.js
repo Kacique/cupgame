@@ -1,15 +1,27 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import { useState } from "react";
+import { getDatabase, ref, onValue, set } from "firebase/database";
+import { useState, useEffect } from "react";
+import "./firebase.js";
 
 export default function App() {
   const [highScore, setHighScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
-
   const cupChoices = ["cup1", "cup2", "cup3"];
 
-  const storeHighScore = (score) => {};
+  const db = getDatabase();
+  const reference = ref(db, "highScore/");
+
+  useEffect(() => {
+    onValue(reference, (snapshot) => {
+      if (snapshot.val() !== null) setHighScore(snapshot.val().highScore);
+    });
+  }, []);
+
+  const storeHighScore = (score) => {
+    set(reference, { highScore: score });
+  };
 
   const playRound = (userChoice) => {
     const computerChoice = Math.floor(Math.random() * 3);
@@ -23,11 +35,11 @@ export default function App() {
         if (currentScore >= highScore) {
           setHighScore(currentScore + 1);
           storeHighScore(currentScore + 1);
-        } else {
-          setCurrentScore(0);
         }
       }
       return;
+    } else {
+      setCurrentScore(0);
     }
   };
 
