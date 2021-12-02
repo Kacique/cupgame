@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
   cupChoice: {
     fontSize: 20,
     color: "white",
-    textAlign: "center",
+    paddingTop: 30,
+    paddingLeft: 20,
   },
 });
 
