@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { useState, useEffect } from "react";
 import "./firebase.js";
@@ -8,6 +7,7 @@ import "./firebase.js";
 export default function App() {
   const [highScore, setHighScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
+
   const cupChoices = ["cup1", "cup2", "cup3"];
 
   const db = getDatabase();
@@ -24,12 +24,11 @@ export default function App() {
   };
 
   const playRound = (userChoice) => {
-    const computerChoice = Math.floor(Math.random() * 3);
-    console.log("user ===> ", userChoice);
-    console.log("computer ===> ", cupChoices[computerChoice]);
-    // setOutCome({ user: userChoice, computer: cupChoices[computerChoice] });
+    const correctChoice = Math.floor(Math.random() * 3);
+    console.log("Your Choice ===> ", userChoice);
+    console.log("Correct Choice ===> ", cupChoices[correctChoice]);
 
-    if (userChoice === cupChoices[computerChoice]) {
+    if (userChoice === cupChoices[correctChoice]) {
       {
         setCurrentScore(currentScore + 1);
         if (currentScore >= highScore) {
@@ -54,6 +53,10 @@ export default function App() {
             onPress={() => playRound(cupChoice)}
           >
             <Text style={styles.cupChoice}>{cupChoice} </Text>
+            <Image
+              style={styles.cupImage}
+              source={require("./assets/redcup.png")}
+            ></Image>
           </Pressable>
         ))}
       </View>
@@ -75,27 +78,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 40,
   },
-  cup: {
-    margin: 25,
-    height: 100,
-    width: 80,
-    backgroundColor: "red",
-    borderRadius: 40,
-  },
+
   scoreBoard: {
+    paddingTop: 10,
     fontSize: 27,
     width: 160,
-    backgroundColor: "black",
-    color: "white",
+    color: "black",
     height: 90,
     textAlign: "center",
-    borderRadius: 50,
+    borderWidth: 4,
+    borderColor: "black",
+    borderStyle: "dashed",
+    borderRadius: 5,
   },
   cupChoice: {
     fontSize: 20,
     color: "white",
     paddingTop: 30,
     paddingLeft: 20,
+  },
+  cupImage: {
+    margin: 20,
+    height: 180,
+    width: 150,
+    //backgroundColor: "red",
+    //borderRadius: 40,
   },
 });
 
